@@ -1,0 +1,6 @@
+print(17)
+print(17.1)
+print('hello')
+print("hello")
+print(True)
+print(None)
