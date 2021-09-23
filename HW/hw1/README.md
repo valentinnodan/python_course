@@ -1,1 +1,1 @@
-# python3 tester.py <your python file> <1 - for easy, 2 - for medium, 3 - for hard>
+# python3 tester.py "your python file" "1 - for easy, 2 - for medium, 3 - for hard"
