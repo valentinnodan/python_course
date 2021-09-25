@@ -72,6 +72,9 @@ def main(number):
             process.stdin.write(thing + "\n")
         process.stdin.write("0\n")
         process.stdin.close()
+        errors=process.stderr.readlines()
+        for error in errors:
+            print(error)
         answer = process.stdout.readline()
         if (version in {1}):
             res = answer.split()[0]
