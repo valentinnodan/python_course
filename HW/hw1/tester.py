@@ -2,7 +2,7 @@
 import sys
 import subprocess
 import random
-
+import sys
 
 def check_0(val):
     if (int(val) == 0):
@@ -50,7 +50,9 @@ def main(number):
             return
         version = int(version)
 
-        process = subprocess.Popen(["python3", python_script],
+        print(sys.executable)
+
+        process = subprocess.Popen([sys.executable, python_script],
                             stdin =subprocess.PIPE,
                             stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE,
