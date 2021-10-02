@@ -4,6 +4,12 @@ import subprocess
 import random
 import sys
 
+
+python_script = None
+version = None
+i = 0
+
+
 def check_0(val):
     if (int(val) == 0):
         return '1'
@@ -31,65 +37,127 @@ def genarator_plus_minus(version):
         res = "+" + res
     return res
 
+
 def check_int(s):
-    if s[0] in ('-', '+'):
-        return s[1:].isdigit()
-    return s.isdigit()
-
-
-def main(number):
     try:
-        if (len(sys.argv) != 3):
-            print("Not enought arguments")
-            return
-        
-        python_script = sys.argv[1]
-        version = sys.argv[2]
-        if not check_int(version) or not int(version) in {1,2,3}:
-            print("Version shound be {1 for easy, 2 for medium, 3 for hard}")
-            return
-        version = int(version)
+        int(s)
+        return 1
+    except:
+        return 0
 
-        print(sys.executable)
 
-        process = subprocess.Popen([sys.executable, python_script],
-                            stdin =subprocess.PIPE,
+def write(arr, stdin):
+    for elem in arr:
+        stdin.write(elem + "\n")
+    stdin.write("0\n")
+    stdin.close()
+
+
+def launch(python_script):
+    return subprocess.Popen([sys.executable, python_script],
+                            stdin=subprocess.PIPE,
                             stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE,
                             universal_newlines=True)
 
-        length = random.randint(2, 50)
 
-        resultPlus = 0
-        resultMin = 0
+def gen_random():
+    things = []
+    length = random.randint(2, 50)
+    for _ in range(length):
+        thing = genarator_plus_minus(version)
+        things.append(thing)
+    return things
 
-        for _ in range(length):
-            thing = genarator_plus_minus(version)
-            if (check_int(thing)):
-                val = int(thing)
-                if (val > 0) :
-                    resultPlus+=val
-                else:
-                    resultMin+=val
-            process.stdin.write(thing + "\n")
-        process.stdin.write("0\n")
-        process.stdin.close()
-        errors=process.stderr.readlines()
+
+def solve(things):
+    resultPlus = 0
+    resultMinus = 0
+    for thing in things:
+        if (check_int(thing)):
+            val = int(thing)
+            if (val > 0):
+                resultPlus += val
+            else:
+                resultMinus += val
+    return resultPlus, resultMinus
+
+
+def checkAns(resultPlus, resultMinus, stdout):
+    answer = stdout.readline()
+    if (version in {1}):
+        res = answer.split()[0]
+        assert int(res) == resultPlus + resultMinus
+    else:
+        res, plus, minus = answer.split()
+        assert int(res) == resultPlus + resultMinus
+        assert int(plus) == resultPlus
+        assert int(minus) == resultMinus
+
+
+def main(gen):
+    global i
+    i += 1
+    try:
+        process = launch(python_script)
+
+        things = gen()
+
+        resultPlus, resultMinus = solve(things)
+
+        write(things, process.stdin)
+
+        errors = process.stderr.readlines()
         for error in errors:
             print(error)
-        answer = process.stdout.readline()
-        if (version in {1}):
-            res = answer.split()[0]
-            assert int(res) == resultPlus + resultMin
-        else:
-            res, plus, minus = answer.split()
-            assert int(res) == resultPlus + resultMin
-            assert int(plus) == resultPlus
-            assert int(minus) == resultMin
-        print(f"success {number}")
+
+        checkAns(resultPlus, resultMinus, process.stdout)
+
+        print(f"success {i}")
     except:
-        print(f"test failed: {number}")
+        print(f"test failed: {i}")
+
+
+def args_check():
+    global python_script, version
+
+    if (len(sys.argv) != 3):
+        print("Not enought arguments")
+        return
+
+    python_script = sys.argv[1]
+    version = sys.argv[2]
+    if not check_int(version) or not int(version) in {1, 2, 3}:
+        print("Version shound be {1 for easy, 2 for medium, 3 for hard}")
+        return
+    version = int(version)
+
 
 if __name__ == "__main__":
+
+    args_check()
+
     for i in range(10):
-        main(i + 1)
+        main(gen_random)
+    if version in {3}:
+        main(lambda: ["-111111k111111", "+1111111111111"])
+        main(lambda: ["-111111k111111", "+1111111111111"])
+        main(lambda: ["-111111111111", "+1111111111111"])
+        main(lambda: ["-111111-111111", "+111111+1111111"])
+        main(lambda: ["-111111-111111", "+111111-1111111"])
+        main(lambda: ["-111111+111111", "+111111-1111111"])
+        main(lambda: ["-111111+111111", "+111111+1111111"])
+        main(lambda: ["my", "name", "is", "jeff"])
+        main(lambda: ["-111111111111", "++1111111111111"])
+        main(lambda: ["-11111111111l", "+1111111111111l"])
+        main(lambda: ["10", "0x10"])
+        main(lambda: [""])
+        main(lambda: ["12", "34", "", "-12", "-34"])
+        print("Advanced:")
+        main(lambda: [" 12 ", " 34 ", "   ", " -12 ", " -34 "])
+        main(lambda: [" 12 ", " 34 ", "   ", " - 12 ", " -34 "])
+        main(lambda: [" 12 ", " 34 ", "   ", " 12- ", " -34 "])
+        main(lambda: [" 12 ", " 34 ", "   ", " 12  -  0", " -34 "])
+        main(lambda: [" 1 2 ", " 34 ", "   ", " 12  -  0", " -34 "])
+        main(lambda: [" --12 ", " 34 ", "   ", " -34 "])
+        main(lambda: [" ++12 ", " 34 ", "   ", " -34 "])
