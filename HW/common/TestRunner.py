@@ -8,8 +8,8 @@ from common.Importer import Importer
 TEST_DIR_OVERRIDES = {}
 
 
-def find_first_exist_dir(dirs, error_message='existing directory not found'):
-    exist_dirs = [Path.cwd() / d for d in dirs if d and (Path.cwd() / d).is_dir()]
+def find_first_exist_dir(dirs, prefix='.', error_message='existing directory not found'):
+    exist_dirs = [Path.cwd() / prefix / d for d in dirs if d and (Path.cwd() / prefix / d).is_dir()]
     if len(exist_dirs) == 0:
         raise ValueError(error_message)
 
@@ -39,7 +39,7 @@ class TestRunner:
         self.test_module = import_by_path("hw_test_code", self.test_dir / 'tests.py')
 
     def get_test_src_dir(self):
-        return find_first_exist_dir(self._get_default_dir_names(),
+        return find_first_exist_dir(self._get_default_dir_names(), prefix='HW' if Path.cwd().parts[-1] != 'HW' else '.',
                                     error_message=f'directory with test sources for hw {self.hw_number} not found')
 
     def _get_default_dir_names(self):
