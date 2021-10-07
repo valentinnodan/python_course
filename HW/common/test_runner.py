@@ -1,9 +1,8 @@
 import unittest
 from pathlib import Path
 import importlib.util
-import sys
 
-from common.Importer import Importer
+from common.importer import Importer
 
 TEST_DIR_OVERRIDES = {}
 
@@ -19,7 +18,6 @@ def find_first_exist_dir(dirs, prefix='.', error_message='existing directory not
 def import_by_path(module, path):
     spec = importlib.util.spec_from_file_location(module, path)
     import_module = importlib.util.module_from_spec(spec)
-    sys.modules[spec.name] = module
     spec.loader.exec_module(import_module)
     return import_module
 
@@ -57,8 +55,9 @@ class TestRunner:
 def run_tests(module, globals, import_functions, test_causes):
     importer = Importer(import_functions)
     importer.default_import(module, globals)
+
     test_load = unittest.TestLoader()
     suites = [test_load.loadTestsFromTestCase(test_cause) for test_cause in test_causes]
+
     runner = unittest.TextTestRunner()
-    res_suite = unittest.TestSuite(suites)
-    runner.run(res_suite)
+    runner.run(unittest.TestSuite(suites))

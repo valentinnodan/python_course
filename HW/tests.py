@@ -1,6 +1,6 @@
 import argparse
 
-from common.TestRunner import TestRunner
+from common.test_runner import TestRunner
 
 
 def get_args_parser():

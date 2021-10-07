@@ -1,7 +1,7 @@
 import random
 import unittest
 
-from common.TestRunner import run_tests
+from common.test_runner import run_tests
 
 
 class AckermannTestCase(unittest.TestCase):
@@ -24,6 +24,12 @@ class CounterTestCase(unittest.TestCase):
         self.assertEqual(counter(), 2)
         self.assertEqual(counter(), 3)
 
+    def test_counter_without_default_value(self):
+        counter = generate_counter()
+        self.assertEqual(counter(), 1)
+        self.assertEqual(counter(), 2)
+        self.assertEqual(counter(), 3)
+
     def test_simple_counter_with_init_value(self):
         counter = generate_counter(10)
         self.assertEqual(counter(), 11)
@@ -39,14 +45,14 @@ class CounterTestCase(unittest.TestCase):
         self.counter_test(counter, -41, 100)
 
     def test_create_two_counters(self):
-        counter1 = generate_counter(0)
+        counter1 = generate_counter()
         counter2 = generate_counter(10)
         self.assertEqual(counter1(), 1)
         self.assertEqual(counter1(), 2)
 
     def test_two_counters(self):
-        counter1 = generate_counter(0)
-        counter2 = generate_counter(0)
+        counter1 = generate_counter()
+        counter2 = generate_counter()
         self.assertEqual(counter1(), 1)
         self.assertEqual(counter1(), 2)
         self.assertEqual(counter2(), 1)
