@@ -118,6 +118,10 @@ def strange_varargs_sum(a, b, *args):
     return a + b + sum(args)
 
 
+def sum_with_default_args(a, *args, b=5, c=5):
+    return a + sum(args) + b + c
+
+
 class PartialApplyTestCase(unittest.TestCase):
     def test_simple_apply(self):
         mul_part = part(mul, 1)
@@ -147,6 +151,11 @@ class PartialApplyTestCase(unittest.TestCase):
         self.assertEqual(sum_part(), 3)
         self.assertEqual(sum_part(3), 6)
         self.assertEqual(sum_part(7), 10)
+
+    def test_sum_with_default_agrs(self):
+        sum_part = part(sum_with_default_args, 1, 2)
+        sum_part = part(sum_part, 3, 4)
+        self.assertEqual(sum_part(5), 25)
 
 
 def easy_tests(module):
