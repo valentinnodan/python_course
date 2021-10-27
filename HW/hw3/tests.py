@@ -68,7 +68,7 @@ def gen_answer(fm: FileMachine, n_words: int, n_ind_words: int, hard: bool = Fal
     stats_new=sorted(filter(lambda x: len(x) > 1, stats), key=lambda x: x[1])
     with open(fm.gold_output, "w") as f:
         for word in stats_new:
-            f.write(word[0])
+            f.write(word[0].lower())
             f.write(" ")
             f.write(str(len(word[1:])))
             if hard:
