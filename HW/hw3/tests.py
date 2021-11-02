@@ -18,11 +18,11 @@ class FileMachine:
             shutil.rmtree(self.dir)
         os.makedirs(self.dir)
         self.input = self.dir + "/input"
-        open(self.input, 'a').close()
+        open(self.input, 'a', encoding="utf-8").close()
         self.output = self.dir + "/output"
-        open(self.output, 'a').close()
+        open(self.output, 'a', encoding="utf-8").close()
         self.gold_output = self.dir + "/gold_output"
-        open(self.gold_output, 'a').close()
+        open(self.gold_output, 'a', encoding="utf-8").close()
 
     def check_equality(self):
         assert filecmp.cmp(self.output, self.gold_output)
@@ -66,7 +66,7 @@ def gen_answer(fm: FileMachine, n_words: int, n_ind_words: int, hard: bool = Fal
         stats[wn].append(i + 1)
 
     stats_new=sorted(filter(lambda x: len(x) > 1, stats), key=lambda x: x[1])
-    with open(fm.gold_output, "w") as f:
+    with open(fm.gold_output, "w", encoding="utf-8") as f:
         for word in stats_new:
             f.write(word[0].lower())
             f.write(" ")
@@ -82,7 +82,7 @@ def gen_answer(fm: FileMachine, n_words: int, n_ind_words: int, hard: bool = Fal
         for a in word[1:]:
             file[a - 1] = word[0]
 
-    with open(fm.input, "w") as f:
+    with open(fm.input, "w", encoding="utf-8") as f:
         if len(file) == 0:
             return
         f.write(file[0])
