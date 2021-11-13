@@ -13,19 +13,27 @@ from common.test_runner import run_tests
 
 class FileMachine:
     def __init__(self):
-        self.dir = os.path.dirname(os.path.join(os.getcwd(), sys.argv[0])) + "/tmp"
+        self.dir = os.path.join(os.path.dirname(os.path.join(os.getcwd(), sys.argv[0])), "tmp")
         if (os.path.isdir(self.dir)):
             shutil.rmtree(self.dir)
         os.makedirs(self.dir)
-        self.input = self.dir + "/input"
+        self.input = os.path.join(self.dir, "input")
         open(self.input, 'a', encoding="utf-8").close()
         self.output = self.dir + "/output"
         open(self.output, 'a', encoding="utf-8").close()
-        self.gold_output = self.dir + "/gold_output"
+        self.gold_output = os.path.join(self.dir, "gold_output")
         open(self.gold_output, 'a', encoding="utf-8").close()
 
     def check_equality(self):
-        assert filecmp.cmp(self.output, self.gold_output)
+        res = filecmp.cmp(self.output, self.gold_output)
+        if not res:
+            print("Actual:")
+            with open(self.output, "r") as f: 
+                print(f.read())
+            print("Expected:")
+            with open(self.gold_output, "r") as f: 
+                print(f.read())
+            assert filecmp.cmp(self.output, self.gold_output)
 
     def remove(self):
         shutil.rmtree(self.dir)
