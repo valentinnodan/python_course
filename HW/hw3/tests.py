@@ -9,11 +9,18 @@ import sys
 import shutil
 
 from common.test_runner import run_tests
+from itertools import chain
+
+
+def char_range(c1, c2):
+    for c in range(ord(c1), ord(c2)+1):
+        yield chr(c)
 
 
 class FileMachine:
     def __init__(self):
-        self.dir = os.path.join(os.path.dirname(os.path.join(os.getcwd(), sys.argv[0])), "tmp")
+        self.dir = os.path.join(os.path.dirname(
+            os.path.join(os.getcwd(), sys.argv[0])), "tmp")
         if (os.path.isdir(self.dir)):
             shutil.rmtree(self.dir)
         os.makedirs(self.dir)
@@ -28,10 +35,10 @@ class FileMachine:
         res = filecmp.cmp(self.output, self.gold_output)
         if not res:
             print("Actual:")
-            with open(self.output, "r") as f: 
+            with open(self.output, "r") as f:
                 print(f.read())
             print("Expected:")
-            with open(self.gold_output, "r") as f: 
+            with open(self.gold_output, "r") as f:
                 print(f.read())
             assert filecmp.cmp(self.output, self.gold_output)
 
@@ -39,17 +46,27 @@ class FileMachine:
         shutil.rmtree(self.dir)
 
 
+def norm(x):
+    return x.isalpha() and x.lower().isalpha() and ("a" + x).lower() == "a" + x.lower() and (x + "a").lower() == x.lower() + "a" and ("a" + x + "a").lower() == "a" + x.lower() + "a"
+
+
+small = [i for i in chain(char_range('a', 'z'), char_range('а', 'я'))]
+big = list(filter(lambda x: norm(x), [i for i in chain(char_range(
+    'A', 'Z'), char_range('А', 'Я'), char_range("\u0000", "\uffff"))]))
+
+
 def randword():
     word = []
-    length = random.randrange(4, 12)
+    length = random.randrange(5, 40)
     for _ in range(length):
-        start = 'a'
+        start = small
         if random.randint(0, 10) == 0:
-            start = 'A'
-        word.append(chr(ord(start) + random.randrange(0, 26)))
+            start = big
+        word.append(random.choice(start))
     if (random.randint(0, 40) == 0):
         word.insert(3, '-')
     return "".join(word)
+
 
 whitespaces = [" ", " ", " ", "\n", "\t"]
 
@@ -73,7 +90,7 @@ def gen_answer(fm: FileMachine, n_words: int, n_ind_words: int, hard: bool = Fal
         wn = random.randrange(0, n_ind_words)
         stats[wn].append(i + 1)
 
-    stats_new=sorted(filter(lambda x: len(x) > 1, stats), key=lambda x: x[1])
+    stats_new = sorted(filter(lambda x: len(x) > 1, stats), key=lambda x: x[1])
     with open(fm.gold_output, "w", encoding="utf-8") as f:
         for word in stats_new:
             f.write(word[0].lower())
@@ -98,6 +115,7 @@ def gen_answer(fm: FileMachine, n_words: int, n_ind_words: int, hard: bool = Fal
             f.write(separator())
             f.write(file[i])
 
+
 class TestBase(unittest.TestCase):
 
     @abstractmethod
@@ -120,18 +138,36 @@ class TestBase(unittest.TestCase):
     def test_3(self):
         self.base(60, 40)
 
+    def test_4(self):
+        self.base(60, 40)
+
+    def test_5(self):
+        self.base(600, 40)
+
+    def test_6(self):
+        self.base(600, 400)
+
+    def test_small(self):
+        for i in range(100):
+            self.base(60, 40)
+
+    def test_max(self):
+        for i in range(100):
+            self.base(600, 400)
+
+
 class CollectorTestCase(TestBase):
 
     @abstractmethod
     def hard(self):
         return False
 
+
 class CollectorTestCaseHard(TestBase):
 
     @abstractmethod
     def hard(self):
         return True
-
 
 
 def easy_tests(module):
