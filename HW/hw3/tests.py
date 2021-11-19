@@ -35,10 +35,10 @@ class FileMachine:
         res = filecmp.cmp(self.output, self.gold_output)
         if not res:
             print("Actual:")
-            with open(self.output, "r") as f:
+            with open(self.output, "r", encoding="utf-8") as f:
                 print(f.read())
             print("Expected:")
-            with open(self.gold_output, "r") as f:
+            with open(self.gold_output, "r", encoding="utf-8") as f:
                 print(f.read())
             assert filecmp.cmp(self.output, self.gold_output)
 
