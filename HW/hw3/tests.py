@@ -66,8 +66,6 @@ def randword():
         word.append(random.choice(start))
     if (random.randint(0, 40) == 0):
         word.insert(3, '-')
-    if (random.randint(0, 500) == 0):
-        word.append("'")
     if (word[-1] == 's'):
         if (random.randint(0, 40) == 0):
             word.insert(-1, "'")
@@ -79,7 +77,7 @@ def separator():
     if (random.randrange(0, 30) == 0):
         return random.choice(whitespaces) + random.choice(string.punctuation) + random.choice(whitespaces)
     if (random.randrange(0, 5) == 0):
-        return random.choice(string.punctuation.replace("'", "")) + random.choice(whitespaces)
+        return random.choice(string.punctuation) + random.choice(whitespaces)
     return random.choice(whitespaces)
 
 
