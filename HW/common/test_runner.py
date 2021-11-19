@@ -59,5 +59,5 @@ def run_tests(module, globals, import_functions, test_causes):
     test_load = unittest.TestLoader()
     suites = [test_load.loadTestsFromTestCase(test_cause) for test_cause in test_causes]
 
-    runner = unittest.TextTestRunner()
+    runner = unittest.TextTestRunner(verbosity=2)
     runner.run(unittest.TestSuite(suites))
