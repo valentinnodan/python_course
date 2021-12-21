@@ -35,6 +35,15 @@ class DefaultDictTestCase(unittest.TestCase):
         d.update(name='John', action='ran')
         self.assertEqual('%(name)s %(action)s to %(object)s' % d, 'John ran to the market')
 
+    def test_constructor1(self):
+        d = mydefaultdict(str, short='dict', long='dictionary')
+        self.assertEqual('%(short)s %(long)s' % d, 'dict dictionary')
+
+    def test_constructor2(self):
+        d = mydefaultdict(str, {'short':'dict', 'long':'dictionary'})
+        self.assertEqual('%(short)s %(long)s' % d, 'dict dictionary')
+        d = mydefaultdict(str, [('short', 'dict'), ('long', 'dictionary')])
+        self.assertEqual('%(short)s %(long)s' % d, 'dict dictionary')
 
 def easy_tests(module):
     run_tests(module, globals(), ['mydefaultdict'], [DefaultDictTestCase])
