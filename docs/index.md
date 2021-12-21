@@ -171,7 +171,7 @@
     В этой домашке Вам предстоит самостоятельно написать этот класс
 
     1. Пример использования:
-    ```python3
+    ```python
     s = 'mississippi'
     d = mydefaultdict(int)
     for k in s:
