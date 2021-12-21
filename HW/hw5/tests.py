@@ -42,4 +42,3 @@ def easy_tests(module):
 
 def hard_tests(module):
     easy_tests(module)
-
