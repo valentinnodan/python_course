@@ -12,14 +12,16 @@ def fun1(memo, tags=''):
 
 
 def modify_the_biggest_part_of_the_thing_which_contains_all_the_sense(thing_id, memo):
-    for thing in things:
+    for i in range(len(things)):
+        thing = things[i]
         if thing[-1] == thing_id:
             thing[0] = memo
             break
 
 def modify_TAGZZZ(thing_id, tags):
 
-        for thing in things:
+        for i in range(len(things)):
+            thing = things[i]
             if thing[-1] == thing_id:
                 thing[1] = tags
                 break
@@ -32,7 +34,8 @@ def search(filter):
 
 def fun2(thing_id, memo):
         thing = None
-        for x in things:
+        for i in range(len(things)):
+            x = things[i]
             if x[-1] == thing_id:
                  thing = x
         if thing:
@@ -59,7 +62,8 @@ the_seq = things
 def shower(things=None):
     if not things:
         things = the_seq
-    for thing in things:
+    for i in range(len(things)):
+        thing = things[i]
         print(f"""Note id: {thing[-1]}
 Note tags: {thing[1]}
 Note text: {thing[0]}
